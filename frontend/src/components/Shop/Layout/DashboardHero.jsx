@@ -6,11 +6,11 @@ import { MdBorderClear } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllProductsShop } from "../../../redux/actions/product";
 import { getAllOrdersOfShop } from "../../../redux/actions/order";
-import { Button } from "@material-ui/core";
-import { DataGrid } from "@material-ui/data-grid";
+import { Button } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
 const DashboardHero = () => {
-  const [deliverdOrder ,setDeliverdOrder ] = useState();
-  const { products} = useSelector((state) => state.products);
+  const [deliverdOrder, setDeliverdOrder] = useState();
+  const { products } = useSelector((state) => state.products);
   const { seller } = useSelector((state) => state.seller);
   const { orders } = useSelector((state) => state.order);
 
@@ -19,10 +19,10 @@ const DashboardHero = () => {
     dispatch(getAllProductsShop(seller._id));
     dispatch(getAllOrdersOfShop(seller._id));
 
-    const orderData = orders && orders.filter((item) => item.status === "Delivered" );
+    const orderData =
+      orders && orders.filter((item) => item.status === "Delivered");
     setDeliverdOrder(orderData);
-  } ,[dispatch])
-
+  }, [dispatch]);
 
   const columns = [
     { field: "id", headerName: "Order Id", minWidth: 150, flex: 0.7 },
@@ -70,7 +70,7 @@ const DashboardHero = () => {
       },
     },
   ];
-const availableBalance = seller?.availableBalance.toFixed(2)
+  const availableBalance = seller?.availableBalance.toFixed(2);
   const row = [];
   orders &&
     orders.forEach((item) => {
@@ -100,7 +100,9 @@ const availableBalance = seller?.availableBalance.toFixed(2)
               <span>(with 10% service charge)</span>
             </h3>
           </div>
-          <h5 className="pt-2 pl-[36px] text-[20px] font-[500]">${availableBalance}</h5>
+          <h5 className="pt-2 pl-[36px] text-[20px] font-[500]">
+            ${availableBalance}
+          </h5>
           <Link to="/dashboard-withdraw-money">
             <h5 className="pt-4 pl-2 text-[#077f9c]">Withdraw Money</h5>
           </Link>
@@ -115,7 +117,9 @@ const availableBalance = seller?.availableBalance.toFixed(2)
               ALL Orders
             </h3>
           </div>
-          <h5 className="pt-2 pl-[36px] text-[20px] font-[500]">{orders && orders.length}</h5>
+          <h5 className="pt-2 pl-[36px] text-[20px] font-[500]">
+            {orders && orders.length}
+          </h5>
           <Link to="/dashboard-orders">
             <h5 className="pt-4 pl-2 text-[#077f9c]">View Orders</h5>
           </Link>
@@ -133,7 +137,9 @@ const availableBalance = seller?.availableBalance.toFixed(2)
               All Products
             </h3>
           </div>
-          <h5 className="pt-2 pl-[36px] text-[20px] font-[500]">{products && products.length}</h5>
+          <h5 className="pt-2 pl-[36px] text-[20px] font-[500]">
+            {products && products.length}
+          </h5>
           <Link to="/dashboard-products">
             <h5 className="pt-4 pl-2 text-[#077f9c]">View Products</h5>
           </Link>
@@ -142,15 +148,13 @@ const availableBalance = seller?.availableBalance.toFixed(2)
       <br />
       <h3 className="text-[20px] font-Poppins pb-2"> Latest Orders</h3>
       <div className="w-full min-h-[45vh] bg-white rounded">
-     
-          <DataGrid
-            rows={row}
-            columns={columns}
-            pageSize={10}
-            disableSelectionOnClick
-            autoHeight
-          />
-      
+        <DataGrid
+          rows={row}
+          columns={columns}
+          pageSize={10}
+          disableSelectionOnClick
+          autoHeight
+        />
       </div>
     </div>
   );

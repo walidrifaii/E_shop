@@ -8,11 +8,16 @@ import {
 } from "react-icons/ai";
 import styles from "../../style/style";
 import { Link } from "react-router-dom";
-import { DataGrid } from "@material-ui/data-grid";
-import { Button } from "@material-ui/core";
+import { DataGrid } from "@mui/x-data-grid";
+import { Button } from "@mui/material";
 import { MdOutlineTrackChanges, MdTrackChanges } from "react-icons/md";
-import { deleteUserAddress, loadUser, updateUserAddresses, updateUserInformation } from "../../redux/actions/user";
-import { Country, State } from "country-state-city"
+import {
+  deleteUserAddress,
+  loadUser,
+  updateUserAddresses,
+  updateUserInformation,
+} from "../../redux/actions/user";
+import { Country, State } from "country-state-city";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { RxCross1 } from "react-icons/rx";
@@ -37,8 +42,6 @@ const ProfileContent = ({ active }) => {
     if (error) {
       toast.error(error);
       dispatch({ type: "clearErrors" });
-
-
     }
   }, [error, successMessage]);
 
@@ -50,15 +53,16 @@ const ProfileContent = ({ active }) => {
     const formData = new FormData();
     formData.append("image", file); // Append only the first file
 
-    await axios.put(`${server}/user/update-avatar`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-      withCredentials: true,
-    })
+    await axios
+      .put(`${server}/user/update-avatar`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
+      })
       .then((response) => {
         toast.success("Avatar updated successfully");
-        dispatch(loadUser())
+        dispatch(loadUser());
       })
       .catch((error) => {
         toast.error(error.message);
@@ -194,9 +198,8 @@ const ProfileContent = ({ active }) => {
 };
 // orders
 const AllOrders = () => {
- 
-  const {orders} = useSelector((state) => state.order);
-  const {user} = useSelector((state) => state.user);
+  const { orders } = useSelector((state) => state.order);
+  const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -272,13 +275,14 @@ const AllOrders = () => {
 };
 // refund order
 const AllRefundOrders = () => {
-  const {orders} = useSelector((state) => state.order);
-  const {user} = useSelector((state) => state.user);
+  const { orders } = useSelector((state) => state.order);
+  const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getAllOrdersOfUser(user._id));
   }, []);
-  const eligibleOrder = orders && orders.filter((item) => item.status === "Processing refund");
+  const eligibleOrder =
+    orders && orders.filter((item) => item.status === "Processing refund");
 
   const columns = [
     { field: "id", headerName: "Order Id", minWidth: 150, flex: 0.7 },
@@ -328,7 +332,7 @@ const AllRefundOrders = () => {
   ];
   const row = [];
   eligibleOrder &&
-  eligibleOrder.forEach((item) => {
+    eligibleOrder.forEach((item) => {
       row.push({
         id: item._id,
         itemsQty: item.cart.length,
@@ -351,8 +355,8 @@ const AllRefundOrders = () => {
 
 // track order
 const TrackOrder = () => {
-  const {orders} = useSelector((state) => state.order);
-  const {user} = useSelector((state) => state.user);
+  const { orders } = useSelector((state) => state.order);
+  const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getAllOrdersOfUser(user._id));
@@ -429,26 +433,33 @@ const TrackOrder = () => {
 
 // change Password
 const ChangePassword = () => {
-  const [oldPassword, setOldPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   // handle password change
   const passwordChangedHandler = async (e) => {
     e.preventDefault();
-    await axios.put(`${server}/user/update-user-password`, {
-      oldPassword,
-      newPassword,
-      confirmPassword,
-    }, { withCredentials: true }).then((response) => {
-      toast.success(response.data.message);
-      setOldPassword('');
-      setNewPassword('');
-      setConfirmPassword('');
-    }).catch((error) => {
-      toast.error(error.response.data.message);
-    })
-  }
+    await axios
+      .put(
+        `${server}/user/update-user-password`,
+        {
+          oldPassword,
+          newPassword,
+          confirmPassword,
+        },
+        { withCredentials: true }
+      )
+      .then((response) => {
+        toast.success(response.data.message);
+        setOldPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+      });
+  };
   return (
     <div className="w-full px-5">
       <div className="w-full ">
@@ -456,7 +467,10 @@ const ChangePassword = () => {
           Change Password
         </h1>
         <div className="w-full">
-          <form onSubmit={passwordChangedHandler} className="flex flex-col items-center">
+          <form
+            onSubmit={passwordChangedHandler}
+            className="flex flex-col items-center"
+          >
             <div className="W-[100%] 800px:w-[50%] mt-5">
               <label htmlFor="" className="block pb-2">
                 Enter your old password
@@ -520,19 +534,22 @@ const Address = () => {
     toast.success(successMessage);
     dispatch({ type: "clearMessage" });
   }
-  // handle address submit 
+  // handle address submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (addressType === " " || city === " " || country === " ") {
       toast.error("Please fill all fields");
     } else {
-
-      dispatch(updateUserAddresses(country,
-        city,
-        address1,
-        address2,
-        addressType,
-        zipCode,));
+      dispatch(
+        updateUserAddresses(
+          country,
+          city,
+          address1,
+          address2,
+          addressType,
+          zipCode
+        )
+      );
     }
     setOpen(false);
     setAddressType("");
@@ -541,157 +558,186 @@ const Address = () => {
     setZipCode("");
     setAddress1("");
     setAddress2("");
-  }
+  };
   const handleDeleteUserAddress = (item) => {
-    dispatch(deleteUserAddress(item._id))
-  }
+    dispatch(deleteUserAddress(item._id));
+  };
 
   const AddressTypeData = [
     {
       name: "default",
     },
     {
-      name: "home"
+      name: "home",
     },
     {
-      name: "office"
-    }
-  ]
+      name: "office",
+    },
+  ];
   return (
     <div className="w-full px-5">
-      {
-        open && (
-          <div className="fixed w-full h-screen bg-[#0000004b] top-0 left-0 flex items-center justify-center"
-          >
-            <div className="w-[35%] h-[80vh] bg-white rounded shadow relative overflow-y-scroll">
-              <div className="w-full flex justify-end p-3">
-                <RxCross1
-                  size={30}
-                  className=" cursor-pointer"
-                  onClick={() => setOpen(false)}
-                />
-              </div>
-              <h1 className="text-center text-[25px] font-Poppins">
-                Add New Address
-              </h1>
-              <div className="w-full">
-                <form aria-required onSubmit={handleSubmit} className="w-full">
-                  <div className="w-full block p-4">
-                    <div className="w-full pb-2">
-                      <label className="block pb-2" >Country</label>
-                      <select name="" id="" value={country} onChange={(e) => setCountry(e.target.value)} className="w-[100%] border h-[40px] rounded-[5px]">
-                        <option value="" className="block border pb-2">choose your country</option>
-                        {
-                          Country && Country.getAllCountries().map((item) => (
-                            <option value={item.isoCode} key={item.isoCode}>{item.name}</option>
-                          ))
-                        }
-                      </select>
-                    </div>
-                    <div className="w-full pb-2">
-                      <label className="block pb-2" >City</label>
-                      <select name="" id="" value={city} onChange={(e) => setCity(e.target.value)} className="w-[100%] border h-[40px] rounded-[5px]">
-                        <option value="" className="block border pb-2">choose your city</option>
-                        {
-                          State && State.getStatesOfCountry(country).map((item) => (
-                            <option value={item.isoCode} key={item.isoCode}>{item.name}</option>
-                          ))
-                        }
-                      </select>
-                    </div>
-                    <div className="w-full pb-2">
-                      <label className="block pb-2" >Address 1</label>
-                      <input
-                        type="text"
-                        value={address1}
-                        required
-                        onChange={(e) => setAddress1(e.target.value)}
-                        className={`${styles.input}`}
-                      />
-
-                    </div>
-                    <div className="w-full pb-2">
-                      <label className="block pb-2" >Address 2</label>
-                      <input
-                        type="text"
-                        value={address2}
-                        required
-                        onChange={(e) => setAddress2(e.target.value)}
-                        className={`${styles.input}`}
-                      />
-                    </div>
-                    <div className="w-full pb-2">
-                      <label className="block pb-2" >Zip Code</label>
-                      <input
-                        type="number"
-                        value={zipCode}
-                        required
-                        onChange={(e) => setZipCode(e.target.value)}
-                        className={`${styles.input}`}
-                      />
-                    </div>
-                    <div className="w-full pb-2">
-                      <label className="block pb-2" >Address type</label>
-                      <select name="" id="" value={addressType} onChange={(e) => setAddressType(e.target.value)} className="w-[100%] border h-[40px] rounded-[5px]">
-                        <option value="" className="block border pb-2">choose your Address type</option>
-                        {
-                          AddressTypeData && AddressTypeData.map((item) => (
-                            <option value={item.name} key={item.name}>{item.name}</option>
-                          ))
-                        }
-                      </select>
-                    </div>
-                    <div className=" w-full pb-2">
-                      <input type="submit"
-                        className={`${styles.input} mt-5 cursor-pointer`}
-                        required
-                        readOnly
-                      />
-                    </div>
+      {open && (
+        <div className="fixed w-full h-screen bg-[#0000004b] top-0 left-0 flex items-center justify-center">
+          <div className="w-[35%] h-[80vh] bg-white rounded shadow relative overflow-y-scroll">
+            <div className="w-full flex justify-end p-3">
+              <RxCross1
+                size={30}
+                className=" cursor-pointer"
+                onClick={() => setOpen(false)}
+              />
+            </div>
+            <h1 className="text-center text-[25px] font-Poppins">
+              Add New Address
+            </h1>
+            <div className="w-full">
+              <form aria-required onSubmit={handleSubmit} className="w-full">
+                <div className="w-full block p-4">
+                  <div className="w-full pb-2">
+                    <label className="block pb-2">Country</label>
+                    <select
+                      name=""
+                      id=""
+                      value={country}
+                      onChange={(e) => setCountry(e.target.value)}
+                      className="w-[100%] border h-[40px] rounded-[5px]"
+                    >
+                      <option value="" className="block border pb-2">
+                        choose your country
+                      </option>
+                      {Country &&
+                        Country.getAllCountries().map((item) => (
+                          <option value={item.isoCode} key={item.isoCode}>
+                            {item.name}
+                          </option>
+                        ))}
+                    </select>
                   </div>
-                </form>
-              </div>
+                  <div className="w-full pb-2">
+                    <label className="block pb-2">City</label>
+                    <select
+                      name=""
+                      id=""
+                      value={city}
+                      onChange={(e) => setCity(e.target.value)}
+                      className="w-[100%] border h-[40px] rounded-[5px]"
+                    >
+                      <option value="" className="block border pb-2">
+                        choose your city
+                      </option>
+                      {State &&
+                        State.getStatesOfCountry(country).map((item) => (
+                          <option value={item.isoCode} key={item.isoCode}>
+                            {item.name}
+                          </option>
+                        ))}
+                    </select>
+                  </div>
+                  <div className="w-full pb-2">
+                    <label className="block pb-2">Address 1</label>
+                    <input
+                      type="text"
+                      value={address1}
+                      required
+                      onChange={(e) => setAddress1(e.target.value)}
+                      className={`${styles.input}`}
+                    />
+                  </div>
+                  <div className="w-full pb-2">
+                    <label className="block pb-2">Address 2</label>
+                    <input
+                      type="text"
+                      value={address2}
+                      required
+                      onChange={(e) => setAddress2(e.target.value)}
+                      className={`${styles.input}`}
+                    />
+                  </div>
+                  <div className="w-full pb-2">
+                    <label className="block pb-2">Zip Code</label>
+                    <input
+                      type="number"
+                      value={zipCode}
+                      required
+                      onChange={(e) => setZipCode(e.target.value)}
+                      className={`${styles.input}`}
+                    />
+                  </div>
+                  <div className="w-full pb-2">
+                    <label className="block pb-2">Address type</label>
+                    <select
+                      name=""
+                      id=""
+                      value={addressType}
+                      onChange={(e) => setAddressType(e.target.value)}
+                      className="w-[100%] border h-[40px] rounded-[5px]"
+                    >
+                      <option value="" className="block border pb-2">
+                        choose your Address type
+                      </option>
+                      {AddressTypeData &&
+                        AddressTypeData.map((item) => (
+                          <option value={item.name} key={item.name}>
+                            {item.name}
+                          </option>
+                        ))}
+                    </select>
+                  </div>
+                  <div className=" w-full pb-2">
+                    <input
+                      type="submit"
+                      className={`${styles.input} mt-5 cursor-pointer`}
+                      required
+                      readOnly
+                    />
+                  </div>
+                </div>
+              </form>
             </div>
           </div>
-        )
-      }
+        </div>
+      )}
       <div className="w-full flex items-center justify-between ">
-        <h1 className="text-[25px] font-[600] text-[#000000ba] pb-2"
-        >
+        <h1 className="text-[25px] font-[600] text-[#000000ba] pb-2">
           My Address
         </h1>
-        <div className={`${styles.button} !rounded-md`}
+        <div
+          className={`${styles.button} !rounded-md`}
           onClick={() => setOpen(true)}
         >
           <span className="text-[#fff]">Add New Method</span>
         </div>
       </div>
       <br />
-      {
-        user && user.addresses.map((item, index) => (
-          <div className="w-full bg-white h-[70px] rounded-[4px] flex items-center px-3 shadow justify-between pr-10 mb-5" key={index}>
+      {user &&
+        user.addresses.map((item, index) => (
+          <div
+            className="w-full bg-white h-[70px] rounded-[4px] flex items-center px-3 shadow justify-between pr-10 mb-5"
+            key={index}
+          >
             <div className="flex items-center">
               <h5 className="pl-5 font-[600]">{item.addressType}</h5>
             </div>
             <div className="pl-8 flex items-center ">
-              <h6>{item.address1}  {item.address2}</h6>
+              <h6>
+                {item.address1} {item.address2}
+              </h6>
             </div>
             <div className="pl-8 flex items-center ">
               <h6>{user && user.phoneNumber} </h6>
             </div>
-            <div className="min-w-[10%] flex items-center justify-between pl-8" onClick={() => handleDeleteUserAddress(item)}>
+            <div
+              className="min-w-[10%] flex items-center justify-between pl-8"
+              onClick={() => handleDeleteUserAddress(item)}
+            >
               <AiOutlineDelete size={25} className="cursor-pointer" />
             </div>
           </div>
-        ))
-      }
-      {
-        user && user.addresses.length === 0 && (
-          <div className="w-full text-center text-[20px] text-[#000000ba]">
-            No addresses found
-          </div>
-        )
-      }
+        ))}
+      {user && user.addresses.length === 0 && (
+        <div className="w-full text-center text-[20px] text-[#000000ba]">
+          No addresses found
+        </div>
+      )}
     </div>
   );
 };

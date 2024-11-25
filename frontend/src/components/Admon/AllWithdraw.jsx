@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { server } from "../../server";
 import { Link } from "react-router-dom";
-import { DataGrid } from "@material-ui/data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import { BsPencil } from "react-icons/bs";
 import { RxCross1 } from "react-icons/rx";
 
@@ -13,7 +13,7 @@ const AllWithdraw = () => {
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
   const [withdrawData, setWithdrawData] = useState();
-  const [withdrawStatus,setWithdrawStatus] = useState('Processing');
+  const [withdrawStatus, setWithdrawStatus] = useState("Processing");
 
   useEffect(() => {
     axios
@@ -69,11 +69,12 @@ const AllWithdraw = () => {
       minWidth: 130,
       flex: 0.6,
       renderCell: (params) => {
-
         return (
           <BsPencil
             size={20}
-            className={`${params.row.status !== "processing" ? "hidden" : "block"}`}
+            className={`${
+              params.row.status !== "processing" ? "hidden" : "block"
+            }`}
             onClick={() => setOpen(true) || setWithdrawData(params.row)}
           />
         );
@@ -83,14 +84,19 @@ const AllWithdraw = () => {
 
   const handleSubmit = async () => {
     await axios
-      .put(`${server}/withdraw/update-withdraw-request/${withdrawData.id}`,{
-        sellerId: withdrawData.shopId,
-      },{withCredentials: true})
+      .put(
+        `${server}/withdraw/update-withdraw-request/${withdrawData.id}`,
+        {
+          sellerId: withdrawData.shopId,
+        },
+        { withCredentials: true }
+      )
       .then((res) => {
         toast.success("Withdraw request updated successfully!");
         setData(res.data.withdraws);
         setOpen(false);
-      }).catch((err)=>{
+      })
+      .catch((err) => {
         toast.error(err.response.data.message);
       });
   };
