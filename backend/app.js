@@ -4,17 +4,17 @@ const app = express();
 const cookieParse = require("cookie-parser");
 const bodyParse = require("body-parser");
 const cors = require("cors");
-
+const path = require("path");
 app.use(express.json());
 app.use(cookieParse());
 app.use(
   cors({
-    origin: "https://e-shop-3f6f.vercel.app/",
+    origin: "https://e-shop-3f6f.vercel.app",
     credentials: true,
   })
 );
-app.use("/", express.static("uploads"));
-app.use("/", (req,res) => {
+app.use("/", express.static(path.join(__dirname, "./uploads")));
+app.use("/test", (req,res) => {
   res.send("hello world!");
 });
 app.use(bodyParse.urlencoded({ extended: true, limit: "50mb" }));
