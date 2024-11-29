@@ -9,7 +9,7 @@ app.use(express.json());
 app.use(cookieParse());
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://e-shop-3f6f.vercel.app/",
     credentials: true,
   })
 );
